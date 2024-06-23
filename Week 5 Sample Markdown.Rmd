@@ -1,0 +1,44 @@
+---
+title: "Week 5 Visualizations Activity"
+author: Xinghan Liu
+date: 2023/06
+output: word_document
+---
+
+```{r setup, include = F}
+library(ggplot2)
+library(dplyr)
+```
+
+``` {r, echo = F}
+"I am using the dataset called 'renamed' to do this visualizations activity"
+datanew = read.csv('/Users/hankhan688/Documents/heart_2020_cleaned.csv')
+dropped <- datanew %>% select(-KidneyDisease, -SkinCancer)
+dropped[, c("HeartDisease", "Smoking", "AlcoholDrinking", "Stroke")] <- 
+  lapply(dropped[, c("HeartDisease", "Smoking", "AlcoholDrinking", "Stroke")], 
+         function(x) ifelse(x == "Yes", 1, 0))
+renamed <- dropped %>%
+  rename("Alcohol" = "AlcoholDrinking",
+         "Age" = "AgeCategory")
+```
+
+
+```{r, include = T}
+
+data_foruse <-renamed[renamed$Age != "70-74" & renamed$Age != "75-79" & renamed$Age != "80 or older",]
+summary(data_foruse)
+
+```
+
+```{r, echo = T}
+#Using histogram to show the frequency of the Age
+ggplot(data_foruse, aes(Age)) +
+  geom_bar(fill = "#0073C2FF") 
+```
+
+```{r, echo = T}
+#Using scatter plot to show the correlation between MentalHealth and BMI
+ggplot(aes(x=MentalHealth,y=BMI),data=data_foruse)+
+  geom_point(alpha=1/500)
+```
+
